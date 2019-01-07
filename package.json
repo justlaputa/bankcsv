@@ -4,6 +4,7 @@
   "description": "download csv file from bank site",
   "main": "index.js",
   "scripts": {
+    "start": "node --experimental-modules ./index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "xiao han",
