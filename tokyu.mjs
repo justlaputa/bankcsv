@@ -30,7 +30,15 @@ export default async (browser, downloadPath) => {
 
     await login(page)
     await gotoDetailPage(page)
-    const csvFilepath = await downloadCSV(page, downloadPath)
+    let csvFilepath = ''
+
+    try {
+        csvFilepath = await downloadCSV(page, downloadPath)
+    } catch(e) {
+        console.log('download failed, try again')
+        csvFilepath = await downloadCSV(page, downloadPath)
+    }
+
     const newFilepath = addBasenamePrefix(csvFilepath, 'tokyu_')
     await renameFile(csvFilepath, newFilepath)
     console.log('file downloaded to %s', newFilepath)
@@ -54,7 +62,10 @@ async function gotoDetailPage(page) {
 async function downloadCSV(page, downloadDir) {
     await page.click(S_DOWNLOAD_CSV_BTN)
 
-    const response = await page.waitForResponse(resp => resp.url().startsWith(CSV_RESP_URL_PREFIX))
+    const response = await page.waitForResponse(
+        resp => resp.url().startsWith(CSV_RESP_URL_PREFIX),
+        { timeout: 1000 }
+    )
     const downloadFilename = getFilenameFromHeaders(response.headers())
     const filepath = path.resolve(downloadDir, downloadFilename)
 

@@ -16,7 +16,7 @@ const DOWNLOAD_PATH = path.resolve(path.dirname(''), 'downloads')
 
 async function main() {
     const browser = await puppeteer.launch({
-        headless: false,
+        headless: true,
         userDataDir: defaultUserDataDir,
     })
 

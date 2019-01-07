@@ -50,7 +50,7 @@ export default async (browser, downloadPath) => {
     const amzFilepath = await downloadCSV(page, downloadPath)
     const newAmzFilepath = addBasenamePrefix(amzFilepath, 'amz_')
     await renameFile(amzFilepath, newAmzFilepath)
-    console.log('amazon file downloaded to %s', newAnaFilepath)
+    console.log('amazon file downloaded to %s', newAmzFilepath)
 }
 
 async function gotoAnaDetaiPage(page) {
