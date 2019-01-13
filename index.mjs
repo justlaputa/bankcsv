@@ -3,11 +3,11 @@
  */
 
 import path from 'path'
-import puppeteer from 'puppeteer'
+import fs from 'fs'
 import dotenv from 'dotenv'
-import smbc from './smbc'
-import vpass from './vpass'
-import tokyu from './tokyu'
+
+import downloadAll from './web'
+import processAll from './process'
 
 dotenv.config()
 
@@ -15,15 +15,9 @@ const defaultUserDataDir = path.resolve(path.dirname(''), 'userdata')
 const DOWNLOAD_PATH = path.resolve(path.dirname(''), 'downloads')
 
 async function main() {
-    const browser = await puppeteer.launch({
-        headless: true,
-        userDataDir: defaultUserDataDir,
-    })
-
-    await smbc(browser, DOWNLOAD_PATH)
-    await vpass(browser, DOWNLOAD_PATH)
-    await tokyu(browser, DOWNLOAD_PATH)
-    await browser.close()
+    await downloadAll(DOWNLOAD_PATH, defaultUserDataDir)
+    const data = await processAll(DOWNLOAD_PATH)
+    await fs.promises.writeFile('processed.csv', data)
 }
 
 main().then(
