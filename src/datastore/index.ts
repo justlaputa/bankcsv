@@ -1,9 +1,9 @@
 import { CardDataStore, CsvFileStore } from "../domain";
-import { FireStore } from "./firestore";
+import { GCPFireStore } from "./firestore";
 import { GCS } from "./gcs";
 
 export function newCardDataStore(cardCollectionName: string): CardDataStore {
-    return new FireStore({ cardCollectionName });
+    return new GCPFireStore({ cardCollectionName });
 }
 
 export function newCsvFileStore(bucket: string, prefix: string): CsvFileStore {

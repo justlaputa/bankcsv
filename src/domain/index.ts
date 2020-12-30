@@ -1,19 +1,20 @@
 import { Readable, Stream, Writable } from "stream";
 
-export interface Card {
-    id: string
-    name: string
-    brand: string
-    bank: string
-    billing_date: number
+export class Card {
+    id!: string;
+    name!: string;
+    brand!: string;
+    bank!: string;
+    billing_date!: number;
 }
 
-export interface CardBill {
-    id: string
-    confirmed: boolean
-    billing_month: Date
-    billing_date: Date
-    total_amount: number
+export class CardBill {
+    id!: string;
+    confirmed!: boolean;
+    billing_month!: Date;
+    billing_date!: Date;
+    total_amount!: number;
+    transactions!: BillTransaction[];
 }
 
 export class BillTransaction {
@@ -36,9 +37,9 @@ export interface CsvFileStore {
 }
 
 export interface CardDataStore {
-    addCard(id: string, card: Card): void
-    addCardBill(cardID: string, bill: CardBill): void
-    getCards(): Card[]
-    getCardBills(cardID: string, limit: number): CardBill[]
-    getCardBillWithTransactions(cardID: string, billID: string): BillTransaction[]
+    addCard(card: Card): Promise<void>
+    addCardBill(cardID: string, bill: CardBill): Promise<void>
+    getCards(): Promise<Card[]>
+    getCardBills(cardID: string, limit: number): Promise<CardBill[]>
+    getCardBillWithTransactions(cardID: string, billID: string): Promise<CardBill>
 }
