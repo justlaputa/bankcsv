@@ -19,6 +19,16 @@ export class GCS implements CsvFileStore {
         this.storage = new Storage();
     }
 
+    async listFilename(): Promise<string[]> {
+        const [files, _] = await this.storage.bucket(this.BUCKET).getFiles({
+            autoPaginate: false,
+            delimiter: '/',
+            prefix: this.PREFIX + '/',
+        })
+        console.log('all files in bucket: ', files)
+        return files.map(f => f.name.split('/')[1])
+    }
+
     getReadStream(filename: string): Readable {
         let fullPath = path.join(this.PREFIX, filename);
         return this.storage

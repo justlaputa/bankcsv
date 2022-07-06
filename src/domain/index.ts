@@ -34,6 +34,7 @@ export class BillTransaction {
 export interface CsvFileStore {
     getReadStream(filename: string): Readable
     getWriteStream(filename: string): Writable
+    listFilename(): Promise<string[]>
 }
 
 export interface CardDataStore {

@@ -1,7 +1,7 @@
 import path = require("path");
 import { pipeline, Writable } from "stream";
 import { BillTransaction, CardBill, CardDataStore, CsvFileStore } from "../domain"
-import { CsvDataTransformers, vpassCardParser, yahooCardParser } from "./parsers";
+import { CsvDataTransformers, tokyuCardParser, vpassCardParser, yahooCardParser } from "./parsers";
 
 export class CsvProcesser {
     private csvFileStore: CsvFileStore
@@ -10,6 +10,14 @@ export class CsvProcesser {
     constructor(fileStore: CsvFileStore, cardStore: CardDataStore) {
         this.csvFileStore = fileStore;
         this.cardDataStore = cardStore;
+    }
+
+    async processAll(): Promise<void> {
+        const filenames = await this.csvFileStore.listFilename()
+        console.debug('list files in bucket: ', filenames)
+        for (let filename of filenames) {
+            await this.process(filename)
+        }
     }
 
     async process(filename: string): Promise<void> {
@@ -47,6 +55,7 @@ export class CsvProcesser {
         const parserMap = new Map<string, CsvDataTransformers>([
             ['yahoo', yahooCardParser()],
             ['vpass', vpassCardParser()],
+            ['tokyu', tokyuCardParser()],
         ]);
 
         const result = parserMap.get(cardID);
